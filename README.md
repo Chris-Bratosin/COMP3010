@@ -1,15 +1,15 @@
 # COMP3010 - BOTSv3 Incident Analysis & Presentation
 
-# Introduction
+## Introduction
 
-# SOC Roles & Incident Handling Reflection
+## SOC Roles & Incident Handling Reflection
 
-# Installation & Data Preparation
+## Installation & Data Preparation
 
-# Guided Questions
+## Guided Questions
 
-# Conclusion + Recommendations
+## Conclusion + Recommendations
 
-# References 
+## References 
 
-# Appendix
+## Appendix
