@@ -8,6 +8,7 @@ My goal for this investigation was to use Splunk to identify and gather evidence
 Following this, I will be documenting my findings in a threat intelligence style report suitable for a SOC and Security Management audience.
 
 My objectives were as such:
+
 •	Set up Splunk Enterprise to digest and confirm the datasets coverage.
 
 •	Identify AWS identity activity and relevant authentication context regarding MFA.
