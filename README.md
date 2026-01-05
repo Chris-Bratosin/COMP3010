@@ -78,8 +78,15 @@ Figure 9 – Sorting Source Types
 Figure 10 – Dataset Time Range
 
 Running validation checks ensured that the dataset was properly ingested Splunk Web. Figure 8 shows the total amount of Events from the earliest count to the latest and proves that the dataset exists. Figure 9 shows the breakdown of each source type and the count of events they each have. Figure 10 shows the time coverage of the 2,842,010 events spanning from 08/20/2018 04:00:03.00 – 09/19/2019 18:10:50.00
+## Guided Questions
+In this section, I will document how I went about answering the level 200 questions and how I treated each question like a small, evidence-based investigation. My methodologies and SPL queries I used should help to understand my reasoning and answers for each question.
+Some questions may have multiple pieces of evidence, as they contain answers to other questions, allowing me to clearly explain my thought process behind what I did.
 
-
+Q1 – List out the IAM users that accessed and AWS service (successfully or unsuccessfully) in Frothly’s AWS environment.
+Using the aws:cloudtrail source type I was able to filter it to userIdentity.type=IAMUser which helped to identify any of the users that were using IAM to perform any AWS API activities within the Frothly environment.
+![alt textt](https://github.com/Chris-Bratosin/COMP3010/blob/fd277268123fd2746f1224ffb89d22dea957680c/Evidence/SPL_Q1_EVIDENCE/Table%20of%20Users.png)
+Whilst the first SPL query provided me a table of users making use of IAM, it only returned one username.
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/9359bbc96481a248e6a78dd9d30ea4ea5dc856ad/Evidence/SPL_Q1_EVIDENCE/Q1_IAM_USERS_ANSWER_.png)
 ## Conclusion + Recommendations
 During this investigation I was able to find multiple indicators of security risks within the BOTSv3 AWS Frothly environment. Using CloudTrail I found that the user bstoll was involved in the modification of an S3 bucket where he made is publicly accessible for READ and WRITE. When looking into the S3 access logs, we saw that there was confirmed uploads using HTTP_PUT to the affected bucket notifying that the bucket was open. Additionally, I was also able to find the FQDN endpoint showing that there was an anomaly host making use of a different Windows Editions within the froth.ly domain which highlighted the misconfigurations further that if this was within a live environment, would cause detection/response issues.
 
