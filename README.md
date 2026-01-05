@@ -43,6 +43,7 @@ By installing the addons to my Splunk, it ensured that the dataset was parsed co
 Add-ons Installed
 
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/97ee4f6da877c6466cfb5a69699c8256b2e9a5eb/Evidence/SPL_INSTALLATION/Github%20Addons.png)
+
 Figure 1 - BOTSv3 GitHub Repo Add-ons
 
 Above is the ‘Required Software’ listed in the BOTSv3 repo which stated all the add-ons I had to install to get all the questions answered.
