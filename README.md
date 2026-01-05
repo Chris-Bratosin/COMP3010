@@ -41,8 +41,10 @@ Following the Ubuntu setup, I then installed and configured Splunk and used Splu
 By installing the addons to my Splunk, it ensured that the dataset was parsed correctly so that all my searches provided me with reliable results making my evidence and write up stronger.
 
 Add-ons Installed
-![image alt]([Github-Addons.png](https://github.com/Chris-Bratosin/COMP3010/blob/97ee4f6da877c6466cfb5a69699c8256b2e9a5eb/Evidence/SPL_INSTALLATION/Github%20Addons.png)
+
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/97ee4f6da877c6466cfb5a69699c8256b2e9a5eb/Evidence/SPL_INSTALLATION/Github%20Addons.png)
 Figure 1 - BOTSv3 GitHub Repo Add-ons
+
 Above is the ‘Required Software’ listed in the BOTSv3 repo which stated all the add-ons I had to install to get all the questions answered.
 Splunk Installation 
  
