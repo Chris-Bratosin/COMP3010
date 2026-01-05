@@ -218,5 +218,3 @@ I would recommend that S3 Block Public Access is enabled at the account level al
 [6] “PutBucketAcl - Amazon Simple Storage Service,” docs.aws.amazon.com. https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketAcl.html
 
 [7] “PutObject - Amazon Simple Storage Service,” Amazon.com, 2016. https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutObject.html
-
-## Appendix
