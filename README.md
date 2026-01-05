@@ -40,6 +40,9 @@ By working through the guided questions, I was able to mirror a real SOC workflo
 ## Guided Questions
 
 ## Conclusion + Recommendations
+During this investigation I was able to find multiple indicators of security risks within the BOTSv3 AWS Frothly environment. Using CloudTrail I found that the user bstoll was involved in the modification of an S3 bucket where he made is publicly accessible for READ and WRITE. When looking into the S3 access logs, we saw that there was confirmed uploads using HTTP_PUT to the affected bucket notifying that the bucket was open. Additionally, I was also able to find the FQDN endpoint showing that there was an anomaly host making use of a different Windows Editions within the froth.ly domain which highlighted the misconfigurations further that if this was within a live environment, would cause detection/response issues.
+
+I would recommend that S3 Block Public Access is enabled at the account level alongside enabling restrictions on ACL usage where possible alongside enabling alerts for CloudTrail events that indicate bucket permission being modifying. Finally, I’d recommend implementing stricter MFA, ensuring that it is implemented for all IAM users and alert when mfaAuthenticated returns false. 
 
 ## References 
 
