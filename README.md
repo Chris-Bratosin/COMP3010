@@ -36,8 +36,36 @@ Tier 3 Threat Hunters focus on the most critical alerts (such as S3 misconfigura
 By working through the guided questions, I was able to mirror a real SOC workflow (identify, triage, scope, contain, learn) which provided valuable lessons showing that  the investigation wasn’t necessarily about just finding the answers, rather it was learning how to work through the dataset, finding credible evidence to back my findings and understanding the impact and implications misconfigurations or even small accidents may cause within a network if not handled correctly.
 
 ## Installation & Data Preparation
+To begin the investigation, I had to get a Virtual Machine set up and run the Ubuntu 24.04.3 ISO to run Linux which gave me a consistent and isolated environment in which I could run Splunk locally without affecting my host system while being able to mirror a typical SOC analysis environment.
+Following the Ubuntu setup, I then installed and configured Splunk and used Splunk Web to install all the necessary add-ons listed in the BOTSv3 GitHub repo, then validate dataset ingestion properly by running a few SPL queries to make sure everything was properly set up.
+By installing the addons to my Splunk, it ensured that the dataset was parsed correctly so that all my searches provided me with reliable results making my evidence and write up stronger.
 
-## Guided Questions
+Add-ons Installed
+![alt text](image-url)
+Figure 1 - BOTSv3 GitHub Repo Add-ons
+Above is the ‘Required Software’ listed in the BOTSv3 repo which stated all the add-ons I had to install to get all the questions answered.
+Splunk Installation 
+ 
+Figure 2 - Splunk.deb file + Accepting Licenses
+ 
+Figure 3 - Creating Splunk Account
+ 
+Figure 4 - Uploading Addon onto Splunk Web
+ 
+Figure 5 - Splunk Web Homepage w/ Addons
+ 
+Figure 6 - Locating dataset in downloads to ingest into Splunk
+ 
+Figure 7 - BOTSv3 Dataset Ingestion
+BOTSv3 data was then ingested into the botsv3 index and then ingestion was validated by running the following queries:
+ 
+Figure 8 - Validating BOTSv3 Exists
+ 
+Figure 9 – Sorting Source Types
+ 
+Figure 10 – Dataset Time Range
+Running validation checks ensured that the dataset was properly ingested Splunk Web. Figure 8 shows the total amount of Events from the earliest count to the latest and proves that the dataset exists. Figure 9 shows the breakdown of each source type and the count of events they each have. Figure 10 shows the time coverage of the 2,842,010 events spanning from 08/20/2018 04:00:03.00 – 09/19/2019 18:10:50.00
+
 
 ## Conclusion + Recommendations
 During this investigation I was able to find multiple indicators of security risks within the BOTSv3 AWS Frothly environment. Using CloudTrail I found that the user bstoll was involved in the modification of an S3 bucket where he made is publicly accessible for READ and WRITE. When looking into the S3 access logs, we saw that there was confirmed uploads using HTTP_PUT to the affected bucket notifying that the bucket was open. Additionally, I was also able to find the FQDN endpoint showing that there was an anomaly host making use of a different Windows Editions within the froth.ly domain which highlighted the misconfigurations further that if this was within a live environment, would cause detection/response issues.
