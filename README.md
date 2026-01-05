@@ -48,25 +48,35 @@ Figure 1 - BOTSv3 GitHub Repo Add-ons
 
 Above is the ‘Required Software’ listed in the BOTSv3 repo which stated all the add-ons I had to install to get all the questions answered.
 Splunk Installation 
- 
+
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/ac3a2a9b8c99168cf184fc71da077e10461a1d09/Evidence/SPL_INSTALLATION/Install%20%2B%20Accept%20License.png)
 Figure 2 - Splunk.deb file + Accepting Licenses
- 
+
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/ac3a2a9b8c99168cf184fc71da077e10461a1d09/Evidence/SPL_INSTALLATION/Settings%20Account%20Details.png) 
 Figure 3 - Creating Splunk Account
- 
+
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/ac3a2a9b8c99168cf184fc71da077e10461a1d09/Evidence/SPL_INSTALLATION/Uploading%20Add-on%20to%20SPL.png)
 Figure 4 - Uploading Addon onto Splunk Web
- 
+
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/ac3a2a9b8c99168cf184fc71da077e10461a1d09/Evidence/SPL_INSTALLATION/SPL%20Add-Ons%20Installed.png)
 Figure 5 - Splunk Web Homepage w/ Addons
- 
+
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/ac3a2a9b8c99168cf184fc71da077e10461a1d09/Evidence/SPL_INSTALLATION/Finding%20Data%20Set%20in%20Downloads.png)
 Figure 6 - Locating dataset in downloads to ingest into Splunk
- 
+
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/ac3a2a9b8c99168cf184fc71da077e10461a1d09/Evidence/SPL_INSTALLATION/Ingesting%20the%20Data%20Set.png)
 Figure 7 - BOTSv3 Dataset Ingestion
 BOTSv3 data was then ingested into the botsv3 index and then ingestion was validated by running the following queries:
- 
+
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/ac3a2a9b8c99168cf184fc71da077e10461a1d09/Evidence/BOTSv3_INGESTED_VALIDATION/Validating%20Botsv3%20Exists.png)
 Figure 8 - Validating BOTSv3 Exists
- 
+
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/ac3a2a9b8c99168cf184fc71da077e10461a1d09/Evidence/BOTSv3_INGESTED_VALIDATION/Sorting%20Sourcetypes.png)
 Figure 9 – Sorting Source Types
- 
+
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/ac3a2a9b8c99168cf184fc71da077e10461a1d09/Evidence/BOTSv3_INGESTED_VALIDATION/Showing%20Data%20Set%20Time%20Range.png)
 Figure 10 – Dataset Time Range
+
 Running validation checks ensured that the dataset was properly ingested Splunk Web. Figure 8 shows the total amount of Events from the earliest count to the latest and proves that the dataset exists. Figure 9 shows the breakdown of each source type and the count of events they each have. Figure 10 shows the time coverage of the 2,842,010 events spanning from 08/20/2018 04:00:03.00 – 09/19/2019 18:10:50.00
 
 
