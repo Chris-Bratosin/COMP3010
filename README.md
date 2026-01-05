@@ -1,4 +1,6 @@
 # COMP3010 - BOTSv3 Incident Analysis & Presentation
+
+![Table of Contents](https://github.com/Chris-Bratosin/COMP3010/blob/4536a187075d5819eb0845984016d5e28b3e3da8/Evidence/Table%20of%20Contents.png)
 - Audience: SOC Team Lead/Secuity Management
   
 - Evironemnt: Splunk Enterprise 10.0.2 on Ubuntu 24.04.3 (Oracle VirtualBox VM)
