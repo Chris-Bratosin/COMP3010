@@ -6,8 +6,8 @@ In this report I will be covering an investigation I took on with the BOTSv3 dat
 My goal for this investigation was to use Splunk to identify and gather evidence regarding suspicious or misconfigured activity across AWS and such endpoints. 
 
 Following this, I will be documenting my findings in a threat intelligence style report suitable for a SOC and Security Management audience.
-My objectives were as such:
 
+My objectives were as such:
 •	Set up Splunk Enterprise to digest and confirm the datasets coverage.
 
 •	Identify AWS identity activity and relevant authentication context regarding MFA.
