@@ -84,75 +84,116 @@ Some questions may have multiple pieces of evidence, as they contain answers to 
 
 ### Q1 – List out the IAM users that accessed and AWS service (successfully or unsuccessfully) in Frothly’s AWS environment.
 Using the aws:cloudtrail source type I was able to filter it to userIdentity.type=IAMUser which helped to identify any of the users that were using IAM to perform any AWS API activities within the Frothly environment.
+
 ![alt textt](https://github.com/Chris-Bratosin/COMP3010/blob/fd277268123fd2746f1224ffb89d22dea957680c/Evidence/SPL_Q1_EVIDENCE/Table%20of%20Users.png)
+
 Whilst the first SPL query provided me a table of users making use of IAM, it only returned one username.
+
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/164642f40fbf5753e4baf0116fb204bbf3a3e90f/Evidence/SPL_Q1_EVIDENCE/Q1_IAM_USERS_ANSWER.png)
+
 To find the full list of users I filtered it to userIdentity.type=”IAMUser” to avoid it outputting the activities by the ‘assumedroles’ ensuring it returned all the users, this was summarised by using stats values(userIdentity.userName) which outputted the list of usernames involved in using IAM within the Frothly environment.
 
 ### Q2 – What field would you use to alert that AWS API activity has occurred without MFA?
 
 For Q2, I am asked to figure out what JSON field can be used to indicate the API activity without MFA that is also excluding ConsoleLogin.
+
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/9a71d2b2e8baccec086f5b7263e691dd91360e8e/Evidence/SPL_Q2_EVIDENCE/Checking%20for%20MFA%20Usage.png)
+
 I started by searching the dataset using aws:cloudtrail with MFA being the search criteria allowing me to search for any events containing the MFA in raw JSON. By using spath I am able to parse the CloudTrail JSON so that fields I am looking for can actually be searched for and selected.
 What I found was that I got an output of 2,351 events which in the first 20, the MFA field was blank which meant that majority of them were probably going to be blank. 
+
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/9a71d2b2e8baccec086f5b7263e691dd91360e8e/Evidence/SPL_Q2_EVIDENCE/Results%20indicating%20MFA%20is%20stored%20differently.png)
+
 I added the | where isnotnull(additionalEventData.MFAUsed) so that it would instead output the events where the field I needed was populated rather than empty. However, there were no fields found with this new filter being added. 
 This indicated that the MFA was potentially being stored differently from what I was searching for.
+
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/9a71d2b2e8baccec086f5b7263e691dd91360e8e/Evidence/SPL_Q2_EVIDENCE/Q2_fieldname_answer.png)
+
 I then used fieldsummary and search field=”*MFA*” to find fields where the MFA was present within the dataset. By doing this, I got two outputs where I found userIdentity.sessionContext.attributes.mfaAuthenticated to be the consistent MFA Indicator with a total of 2155 counts of being used.
 
 ### Q3 – What is the processer number used on the web servers?
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/57acc58c04328f5945e64894f798abf0aaf4d828/Evidence/SPL_Q3_EVIDENCE/Checking%20Hardware%20Souretype%20exists.png)
+
 For Q3, I began by running a sanity check with sourcetype=hardware to confirm that the dataset has any relevant hardware events. This resulted in getting 3 outputs with the hardware source type.
+
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/57acc58c04328f5945e64894f798abf0aaf4d828/Evidence/SPL_Q3_EVIDENCE/Possible%20Hosts%20.png)
+
 I then needed to figure out what hosts this hardware events belonged to so that I can figure out what CPU types they were using on the systems. 
+
 By running the | stats count by host | sort – count SPL query, I was able to return the list of hosts that the hardware events belonged to. All I had to do now to figure out the CPU type was click on any one of the events and extract the CPU model.
+
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/57acc58c04328f5945e64894f798abf0aaf4d828/Evidence/SPL_Q3_EVIDENCE/Q3__CPU_TYPE_EVIDENCE.png)
+
 By inspecting the event, I was able to find the CPU model (Intel(R) Xeon(R) CPU E5-2676 v3 @ 2.40GHz) used across the web servers (all 3 hosts were identical).
 
 ### Q4 – Bud accidentally made an S3 bucket publicly accessible. What is the event ID of the API call that enabled public access to the S3 bucket?
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q4_EVIDENCE/Finding%20PutBucketAcl%20events.png)
+
 My goal was to determine whether an S3 bucket was made public, but importantly, which S3 bucket was made public and what its eventID was. 
+
 To do this, I used sourcetype=aws:cloudtrail and then filtered it to eventName=PutBucketAcl. Reason being that typically ACL is what appears as what grants full public access to groups like AllUsers or AuthenticatedUsers.
+
 However, this result gave me two events: one at 13:01:46 and one at 13:57:54. To figure out which was the public one, I ran the following:
+
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q4_EVIDENCE/Sorted%20for%20Public%20Event.png)
+
 I filtered it to buckets that had any of the criteria; public, AllUsers, or AuthenticatedUsers which returned only one event. To confirm this was the right one I inspected the event and found:
+
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q4_EVIDENCE/Q4_PublicAcess_Evidence.png)
+
 This showed that the group, AllUsers was granted permission for READ/WRITE.
 
 ### Q5 – What is Bud’s username?
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q5_EVIDENCE/Q5_Username_Evidence.png)
+
 I looked back into where I inspected the eventID for the public PutBucketAcl and scrolled down to the bottom of the event info and noted that it displayed the userIdentity.type attribute of IAMUser which links back to Q1 where I had to list the IAM users. 
+
 This led me to find that the user who made the bucket public was bstoll.
 
 ### Q6 – What is the name of the bucket that was made publicly accessible?
 I needed to find the name of the bucket that was made public by bstoll. This again was simple as the answer was within the evidence I have provided for Q4 and Q5
+
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q6_EVIDENCE/Q6_BucketName_Evidence.png)
+
 By reviewing the CloudTrail PutBucketAcl event that made the bucket accessible, I can see that there is one attribute which stands out, bucketName: frothlywebcode, which is the answer I am looking for.
 
 ### Q7 – What is the name of the text file that was successfully uploaded into the S3 bucket while it was publicly accessible?
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q7_EVIDENCE/Searching%20for%20any%20uploads%20to%20bucket.png)
+
 I used aws:s3:accesslogs to pull the server access logs from the dataset. 
+
 I then filtered it to search for the bucket name (frothlywebcode) we previously found in Q6 alongside http_method=”PUT” and http_status=200 so that it was filtered to successful upload operations which made it much easier to find the necessary logs needed.
+
 To make it easily readable, I outputted it in a table where I could see the time of any uploads alongside the key which was would provide me with the .txt file I needed, which was:
+
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q7_EVIDENCE/Q7_FileName%2BExtension_Evidence.png)
 
 ### Q8 – What is the FQDN of the endpoint that is running a different Windows operating system edition than the others?
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q8_EVIDENCE/Searching%20for%20OS%20field.png)
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q8_EVIDENCE/Searching%20for%20OS%20field%202.png)
+
 By running a check to find all the OS related fields within the dataset to help find fields containing information about the OS edtions which led to me finding a field that stated exactly that:
+
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/0091d25805c275c990d11a416c2bca34cdfec620/Evidence/SPL_Q8_EVIDENCE/OS%20editions.png)
+
 Following this, I then compared the OS values by host to output a list of each host that was running the OS versions to help me find which host was making use of a different OS version compared to others.
+
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/0091d25805c275c990d11a416c2bca34cdfec620/Evidence/SPL_Q8_EVIDENCE/Searching%20for%20odd%20(OS)%20one%20out.png)
+
 The output I received made it clear which was the anomaly out of all the hosts, however that was only the start. I still had to find the FQDN to get my full answer (BSTOLL-L.*****.**)
 
 I then pivoted to filtering my search to events regarding BSTOLL-L.
+
 ![altt text](https://github.com/Chris-Bratosin/COMP3010/blob/0091d25805c275c990d11a416c2bca34cdfec620/Evidence/SPL_Q8_EVIDENCE/Searching%20for%20BSTOLL-L%20events%20(found%20potential%20FQDN).png)
+
 This pivot returned a small set of events under the syslog sourcetype with the host splunkhwf.froth.ly.
+
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/0091d25805c275c990d11a416c2bca34cdfec620/Evidence/SPL_Q8_EVIDENCE/Found%20the%20FQDN%20in%20event%20payload.png)
+
 When I reviewed the event payload for syslog events, the FQDN was visible in the VSN field which confirmed that the endpoint’s FQDN was BSTOLL-L.froth.ly.
 
 Q6 also was able to provide some supporting context for this as earlier CloudTrail evidence gave some reference to the froth.ly domain which was consistent with FQDN that was in the vsn field.
+
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/8a54e4401d50876a65e3de2feb7286ce6fd9755f/Evidence/SPL_Q8_EVIDENCE/Supporting%20Evidence%20from%20Q6.png)
 ## Conclusion + Recommendations
 During this investigation I was able to find multiple indicators of security risks within the BOTSv3 AWS Frothly environment. Using CloudTrail I found that the user bstoll was involved in the modification of an S3 bucket where he made is publicly accessible for READ and WRITE. When looking into the S3 access logs, we saw that there was confirmed uploads using HTTP_PUT to the affected bucket notifying that the bucket was open. Additionally, I was also able to find the FQDN endpoint showing that there was an anomaly host making use of a different Windows Editions within the froth.ly domain which highlighted the misconfigurations further that if this was within a live environment, would cause detection/response issues.
