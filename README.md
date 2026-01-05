@@ -87,6 +87,19 @@ Using the aws:cloudtrail source type I was able to filter it to userIdentity.typ
 ![alt textt](https://github.com/Chris-Bratosin/COMP3010/blob/fd277268123fd2746f1224ffb89d22dea957680c/Evidence/SPL_Q1_EVIDENCE/Table%20of%20Users.png)
 Whilst the first SPL query provided me a table of users making use of IAM, it only returned one username.
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/164642f40fbf5753e4baf0116fb204bbf3a3e90f/Evidence/SPL_Q1_EVIDENCE/Q1_IAM_USERS_ANSWER.png)
+To find the full list of users I filtered it to userIdentity.type=”IAMUser” to avoid it outputting the activities by the ‘assumedroles’ ensuring it returned all the users, this was summarised by using stats values(userIdentity.userName) which outputted the list of usernames involved in using IAM within the Frothly environment.
+
+Q2 – What field would you use to alert that AWS API activity has occurred without MFA?
+For Q2, I am asked to figure out what JSON field can be used to indicate the API activity without MFA that is also excluding ConsoleLogin.
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/9a71d2b2e8baccec086f5b7263e691dd91360e8e/Evidence/SPL_Q2_EVIDENCE/Checking%20for%20MFA%20Usage.png)
+I started by searching the dataset using aws:cloudtrail with MFA being the search criteria allowing me to search for any events containing the MFA in raw JSON. By using spath I am able to parse the CloudTrail JSON so that fields I am looking for can actually be searched for and selected.
+What I found was that I got an output of 2,351 events which in the first 20, the MFA field was blank which meant that majority of them were probably going to be blank. 
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/9a71d2b2e8baccec086f5b7263e691dd91360e8e/Evidence/SPL_Q2_EVIDENCE/Results%20indicating%20MFA%20is%20stored%20differently.png)
+I added the | where isnotnull(additionalEventData.MFAUsed) so that it would instead output the events where the field I needed was populated rather than empty. However, there were no fields found with this new filter being added. 
+This indicated that the MFA was potentially being stored differently from what I was searching for.
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/9a71d2b2e8baccec086f5b7263e691dd91360e8e/Evidence/SPL_Q2_EVIDENCE/Q2_fieldname_answer.png)
+I then used fieldsummary and search field=”*MFA*” to find fields where the MFA was present within the dataset. By doing this, I got two outputs where I found userIdentity.sessionContext.attributes.mfaAuthenticated to be the consistent MFA Indicator with a total of 2155 counts of being used.
+
 ## Conclusion + Recommendations
 During this investigation I was able to find multiple indicators of security risks within the BOTSv3 AWS Frothly environment. Using CloudTrail I found that the user bstoll was involved in the modification of an S3 bucket where he made is publicly accessible for READ and WRITE. When looking into the S3 access logs, we saw that there was confirmed uploads using HTTP_PUT to the affected bucket notifying that the bucket was open. Additionally, I was also able to find the FQDN endpoint showing that there was an anomaly host making use of a different Windows Editions within the froth.ly domain which highlighted the misconfigurations further that if this was within a live environment, would cause detection/response issues.
 
