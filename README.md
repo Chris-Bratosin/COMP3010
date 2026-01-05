@@ -45,5 +45,18 @@ During this investigation I was able to find multiple indicators of security ris
 I would recommend that S3 Block Public Access is enabled at the account level alongside enabling restrictions on ACL usage where possible alongside enabling alerts for CloudTrail events that indicate bucket permission being modifying. Finally, I’d recommend implementing stricter MFA, ensuring that it is implemented for all IAM users and alert when mfaAuthenticated returns false. 
 
 ## References 
+[1] “Security Operations Center (SOC) Roles and Responsibilities,” Palo Alto Networks. https://www.paloaltonetworks.co.uk/cyberpedia/soc-roles-and-responsibilities
+
+[2] AWS, “What Is IAM? - AWS Identity and Access Management,” Amazon.com, 2025. https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html
+
+[3] “CloudTrail log file examples - AWS CloudTrail,” docs.aws.amazon.com. https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-examples.html
+
+[4] “Who turned on public access to S3 bucket | AWS re:Post,” Amazon Web Services, Inc. https://repost.aws/knowledge-center/s3-bucket-public-access
+
+[5] AWS, “What Is AWS CloudTrail? - AWS CloudTrail,” docs.aws.amazon.com, 2024. https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html
+
+[6] “PutBucketAcl - Amazon Simple Storage Service,” docs.aws.amazon.com. https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketAcl.html
+
+[7] “PutObject - Amazon Simple Storage Service,” Amazon.com, 2016. https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutObject.html
 
 ## Appendix
