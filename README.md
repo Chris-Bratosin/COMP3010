@@ -1,7 +1,9 @@
 # COMP3010 - BOTSv3 Incident Analysis & Presentation
-Audience: SOC Team Lead/Secuity Management
-Evironemnt: Splunk Enterprise 10.0.2 on Ubuntu 24.04.3 (Oracle VirtualBox VM)
-Dataset: Splunk BOTSv3 (index=botsv3)
+- Audience: SOC Team Lead/Secuity Management
+  
+- Evironemnt: Splunk Enterprise 10.0.2 on Ubuntu 24.04.3 (Oracle VirtualBox VM)
+  
+- Dataset: Splunk BOTSv3 (index=botsv3)
 ## Introduction
 In this report I will be covering an investigation I took on with the BOTSv3 dataset using Splunk Enterprise. 
 
