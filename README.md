@@ -43,7 +43,9 @@ By working through the guided questions, I was able to mirror a real SOC workflo
 
 ## Installation & Data Preparation
 To begin the investigation, I had to get a Virtual Machine set up and run the Ubuntu 24.04.3 ISO to run Linux which gave me a consistent and isolated environment in which I could run Splunk locally without affecting my host system while being able to mirror a typical SOC analysis environment.
+
 Following the Ubuntu setup, I then installed and configured Splunk and used Splunk Web to install all the necessary add-ons listed in the BOTSv3 GitHub repo, then validate dataset ingestion properly by running a few SPL queries to make sure everything was properly set up.
+
 By installing the addons to my Splunk, it ensured that the dataset was parsed correctly so that all my searches provided me with reliable results making my evidence and write up stronger.
 
 Add-ons Installed
