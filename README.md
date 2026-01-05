@@ -101,6 +101,25 @@ This indicated that the MFA was potentially being stored differently from what I
 ![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/9a71d2b2e8baccec086f5b7263e691dd91360e8e/Evidence/SPL_Q2_EVIDENCE/Q2_fieldname_answer.png)
 I then used fieldsummary and search field=”*MFA*” to find fields where the MFA was present within the dataset. By doing this, I got two outputs where I found userIdentity.sessionContext.attributes.mfaAuthenticated to be the consistent MFA Indicator with a total of 2155 counts of being used.
 
+### Q3 – What is the processer number used on the web servers?
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/57acc58c04328f5945e64894f798abf0aaf4d828/Evidence/SPL_Q3_EVIDENCE/Checking%20Hardware%20Souretype%20exists.png)
+For Q3, I began by running a sanity check with sourcetype=hardware to confirm that the dataset has any relevant hardware events. This resulted in getting 3 outputs with the hardware source type.
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/57acc58c04328f5945e64894f798abf0aaf4d828/Evidence/SPL_Q3_EVIDENCE/Possible%20Hosts%20.png)
+I then needed to figure out what hosts this hardware events belonged to so that I can figure out what CPU types they were using on the systems. 
+By running the | stats count by host | sort – count SPL query, I was able to return the list of hosts that the hardware events belonged to. All I had to do now to figure out the CPU type was click on any one of the events and extract the CPU model.
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/57acc58c04328f5945e64894f798abf0aaf4d828/Evidence/SPL_Q3_EVIDENCE/Q3__CPU_TYPE_EVIDENCE.png)
+By inspecting the event, I was able to find the CPU model (Intel(R) Xeon(R) CPU E5-2676 v3 @ 2.40GHz) used across the web servers (all 3 hosts were identical).
+
+### Q4 – Bud accidentally made an S3 bucket publicly accessible. What is the event ID of the API call that enabled public access to the S3 bucket?
+
+### Q5 – What is Bud’s username?
+
+### Q6 – What is the name of the bucket that was made publicly accessible?
+
+### Q7 – What is the name of the text file that was successfully uploaded into the S3 bucket while it was publicly accessible?
+
+### Q8 – What is the FQDN of the endpoint that is running a different Windows operating system edition than the others?
+
 ## Conclusion + Recommendations
 During this investigation I was able to find multiple indicators of security risks within the BOTSv3 AWS Frothly environment. Using CloudTrail I found that the user bstoll was involved in the modification of an S3 bucket where he made is publicly accessible for READ and WRITE. When looking into the S3 access logs, we saw that there was confirmed uploads using HTTP_PUT to the affected bucket notifying that the bucket was open. Additionally, I was also able to find the FQDN endpoint showing that there was an anomaly host making use of a different Windows Editions within the froth.ly domain which highlighted the misconfigurations further that if this was within a live environment, would cause detection/response issues.
 
