@@ -111,15 +111,49 @@ By running the | stats count by host | sort – count SPL query, I was able to r
 By inspecting the event, I was able to find the CPU model (Intel(R) Xeon(R) CPU E5-2676 v3 @ 2.40GHz) used across the web servers (all 3 hosts were identical).
 
 ### Q4 – Bud accidentally made an S3 bucket publicly accessible. What is the event ID of the API call that enabled public access to the S3 bucket?
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q4_EVIDENCE/Finding%20PutBucketAcl%20events.png)
+My goal was to determine whether an S3 bucket was made public, but importantly, which S3 bucket was made public and what its eventID was. 
+To do this, I used sourcetype=aws:cloudtrail and then filtered it to eventName=PutBucketAcl. Reason being that typically ACL is what appears as what grants full public access to groups like AllUsers or AuthenticatedUsers.
+However, this result gave me two events: one at 13:01:46 and one at 13:57:54. To figure out which was the public one, I ran the following:
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q4_EVIDENCE/Sorted%20for%20Public%20Event.png)
+I filtered it to buckets that had any of the criteria; public, AllUsers, or AuthenticatedUsers which returned only one event. To confirm this was the right one I inspected the event and found:
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q4_EVIDENCE/Q4_PublicAcess_Evidence.png)
+This showed that the group, AllUsers was granted permission for READ/WRITE.
 
 ### Q5 – What is Bud’s username?
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q5_EVIDENCE/Q5_Username_Evidence.png)
+I looked back into where I inspected the eventID for the public PutBucketAcl and scrolled down to the bottom of the event info and noted that it displayed the userIdentity.type attribute of IAMUser which links back to Q1 where I had to list the IAM users. 
+This led me to find that the user who made the bucket public was bstoll.
 
 ### Q6 – What is the name of the bucket that was made publicly accessible?
+I needed to find the name of the bucket that was made public by bstoll. This again was simple as the answer was within the evidence I have provided for Q4 and Q5
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q6_EVIDENCE/Q6_BucketName_Evidence.png)
+By reviewing the CloudTrail PutBucketAcl event that made the bucket accessible, I can see that there is one attribute which stands out, bucketName: frothlywebcode, which is the answer I am looking for.
 
 ### Q7 – What is the name of the text file that was successfully uploaded into the S3 bucket while it was publicly accessible?
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q7_EVIDENCE/Searching%20for%20any%20uploads%20to%20bucket.png)
+I used aws:s3:accesslogs to pull the server access logs from the dataset. 
+I then filtered it to search for the bucket name (frothlywebcode) we previously found in Q6 alongside http_method=”PUT” and http_status=200 so that it was filtered to successful upload operations which made it much easier to find the necessary logs needed.
+To make it easily readable, I outputted it in a table where I could see the time of any uploads alongside the key which was would provide me with the .txt file I needed, which was:
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q7_EVIDENCE/Q7_FileName%2BExtension_Evidence.png)
 
 ### Q8 – What is the FQDN of the endpoint that is running a different Windows operating system edition than the others?
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q8_EVIDENCE/Searching%20for%20OS%20field.png)
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/a73dc95c6e2269e79170a59fbbefbb5759c53063/Evidence/SPL_Q8_EVIDENCE/Searching%20for%20OS%20field%202.png)
+By running a check to find all the OS related fields within the dataset to help find fields containing information about the OS edtions which led to me finding a field that stated exactly that:
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/0091d25805c275c990d11a416c2bca34cdfec620/Evidence/SPL_Q8_EVIDENCE/OS%20editions.png)
+Following this, I then compared the OS values by host to output a list of each host that was running the OS versions to help me find which host was making use of a different OS version compared to others.
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/0091d25805c275c990d11a416c2bca34cdfec620/Evidence/SPL_Q8_EVIDENCE/Searching%20for%20odd%20(OS)%20one%20out.png)
+The output I received made it clear which was the anomaly out of all the hosts, however that was only the start. I still had to find the FQDN to get my full answer (BSTOLL-L.*****.**)
 
+I then pivoted to filtering my search to events regarding BSTOLL-L.
+![altt text](https://github.com/Chris-Bratosin/COMP3010/blob/0091d25805c275c990d11a416c2bca34cdfec620/Evidence/SPL_Q8_EVIDENCE/Searching%20for%20BSTOLL-L%20events%20(found%20potential%20FQDN).png)
+This pivot returned a small set of events under the syslog sourcetype with the host splunkhwf.froth.ly.
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/0091d25805c275c990d11a416c2bca34cdfec620/Evidence/SPL_Q8_EVIDENCE/Found%20the%20FQDN%20in%20event%20payload.png)
+When I reviewed the event payload for syslog events, the FQDN was visible in the VSN field which confirmed that the endpoint’s FQDN was BSTOLL-L.froth.ly.
+
+Q6 also was able to provide some supporting context for this as earlier CloudTrail evidence gave some reference to the froth.ly domain which was consistent with FQDN that was in the vsn field.
+![alt text](https://github.com/Chris-Bratosin/COMP3010/blob/8a54e4401d50876a65e3de2feb7286ce6fd9755f/Evidence/SPL_Q8_EVIDENCE/Supporting%20Evidence%20from%20Q6.png)
 ## Conclusion + Recommendations
 During this investigation I was able to find multiple indicators of security risks within the BOTSv3 AWS Frothly environment. Using CloudTrail I found that the user bstoll was involved in the modification of an S3 bucket where he made is publicly accessible for READ and WRITE. When looking into the S3 access logs, we saw that there was confirmed uploads using HTTP_PUT to the affected bucket notifying that the bucket was open. Additionally, I was also able to find the FQDN endpoint showing that there was an anomaly host making use of a different Windows Editions within the froth.ly domain which highlighted the misconfigurations further that if this was within a live environment, would cause detection/response issues.
 
