@@ -6,6 +6,8 @@
 - Evironemnt: Splunk Enterprise 10.0.2 on Ubuntu 24.04.3 (Oracle VirtualBox VM)
   
 - Dataset: Splunk BOTSv3 (index=botsv3)
+
+- YouTube Video Presentation Link: https://youtu.be/raU1NEZpY7I
 ## Introduction
 In this report I will be covering an investigation I took on with the BOTSv3 dataset using Splunk Enterprise. 
 
